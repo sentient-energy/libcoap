@@ -234,7 +234,7 @@ AC_ARG_ENABLE([examples],
               [AC_HELP_STRING([--enable-examples],
               [Enable building the tests (default=yes)])],
               [build_examples="$enableval"],
-              [build_examples="yes"])
+              [build_examples="no"])
 
 if test "x$build_examples" = "xyes" -a "x$build_documentation" = "xyes"; then
 	AC_ARG_VAR([A2X], [a2x command])
