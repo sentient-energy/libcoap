@@ -24,7 +24,7 @@ AC_CONFIG_HEADERS([coap_config.h])
 
 AC_PROG_CC
 AM_PROG_CC_C_O
-AM_PROG_AR
+#AM_PROG_AR
 AC_CONFIG_MACRO_DIR([m4])
 
 # enable the automatically build of shared and static libraries, the unit
