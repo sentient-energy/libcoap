@@ -540,7 +540,9 @@ coap_subscription_t *
 coap_add_observer(coap_resource_t *resource, 
 		  const coap_endpoint_t *local_interface,
 		  const coap_address_t *observer,
-		  const str *token) {
+		  const str *token,
+		  const int blk_xfer,
+		  const int blk_szx) {
   coap_subscription_t *s;
   
   assert(observer);
@@ -563,6 +565,9 @@ coap_add_observer(coap_resource_t *resource,
   s->local_if = *local_interface;
   memcpy(&s->subscriber, observer, sizeof(coap_address_t));
   
+  s->blk_xfer = blk_xfer;
+  s->blk_szx = blk_szx;
+
   if (token && token->length) {
     s->token_length = token->length;
     memcpy(s->token, token->s, min(s->token_length, 8));

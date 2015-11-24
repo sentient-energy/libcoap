@@ -1416,12 +1416,18 @@ handle_request(coap_context_t *context, coap_queue_t *node) {
       str token = { node->pdu->hdr->token_length, node->pdu->hdr->token };
       coap_opt_iterator_t opt_iter;
       coap_opt_t *observe = NULL;
+      coap_block_t block;
+      int blk_xfer = 0;
       int observe_action = COAP_OBSERVE_CANCEL;
 
       /* check for Observe option */
       if (resource->observable) {
 	observe = coap_check_option(node->pdu, COAP_OPTION_OBSERVE, &opt_iter);
 	if (observe) {
+	    if (coap_get_block(node->pdu, COAP_OPTION_BLOCK2, &block))
+	    {
+	        blk_xfer = 1;
+	    }
 	  observe_action =
 	    coap_decode_var_bytes(coap_opt_value(observe),
 				  coap_opt_length(observe));
@@ -1431,7 +1437,7 @@ handle_request(coap_context_t *context, coap_queue_t *node) {
 
 	    coap_log(LOG_DEBUG, "create new subscription\n");
 	    subscription = coap_add_observer(resource, &node->local_if, 
-					     &node->remote, &token);
+					     &node->remote, &token, blk_xfer, block.szx);
 	    if (subscription) {
 	      coap_touch_observer(context, &node->remote, &token);
 	    }

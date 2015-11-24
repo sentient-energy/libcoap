@@ -60,6 +60,9 @@ typedef struct coap_subscription_t {
   unsigned int dirty:1;    /**< set if the notification temporarily could not be
                             *   sent (in that case, the resource's partially
                             *   dirty flag is set too) */
+  unsigned int blk_xfer:1; /**< set if the subscriber requests a block transfer */
+  unsigned int blk_szx:3;  /**< the block size desired */
+  unsigned int reserved:4; /**< these 4 bit is not currently in use, reserve it for future development */
   size_t token_length;     /**< actual length of token */
   unsigned char token[8];  /**< token used for subscription */
 } coap_subscription_t;

@@ -297,7 +297,10 @@ void coap_hash_request_uri(const coap_pdu_t *request, coap_key_t key);
 coap_subscription_t *coap_add_observer(coap_resource_t *resource,
                                        const coap_endpoint_t *local_interface,
                                        const coap_address_t *observer,
-                                       const str *token);
+                                       const str *token,
+                                       const int blk_xfer,
+                                       const int blk_num
+                                       );
 
 /**
  * Returns a subscription object for given @p peer.

@@ -18,7 +18,7 @@
 #include <assert.h>
 #else
 #ifndef assert
-#warning "assertions are disabled"
+//#warning "assertions are disabled"
 #  define assert(x)
 #endif
 #endif

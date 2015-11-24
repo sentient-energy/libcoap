@@ -26,6 +26,7 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 #AM_PROG_AR
 AC_CONFIG_MACRO_DIR([m4])
+AC_PREFIX_DEFAULT([/usr])
 
 # enable the automatically build of shared and static libraries, the unit
 # tests needs the static library
@@ -88,9 +89,6 @@ AC_SUBST(LT_LIBCOAP_AGE)
 AC_SUBST(LIBCOAP_SO_VERSION)
 
 # Defining the API Version
-LIBCOAP_API_VERSION=1
-AC_SUBST(LIBCOAP_API_VERSION)
-
 # Adding some default warning options for code QS
 # see https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html
 # and http://www.gnu.org/software/automake/manual/html_node/Flag-Variables-Ordering.html
@@ -118,9 +116,9 @@ AX_CHECK_COMPILE_FLAG([-fdiagnostics-color], [CFLAGS="$CFLAGS -fdiagnostics-colo
 
 AC_SUBST([WARNING_CFLAGS])
 
-AX_CHECK_LINK_FLAG([-Wl,--version-script=./libcoap-${LIBCOAP_API_VERSION}.map],
-                   [libcoap_SYMBOLS="-Wl,--version-script=\$(srcdir)/libcoap-\$(LIBCOAP_API_VERSION).map"],
-                   [libcoap_SYMBOLS="-export-symbols \$(srcdir)/libcoap-\$(LIBCOAP_API_VERSION).sym"])
+AX_CHECK_LINK_FLAG([-Wl,--version-script=./libcoap.map],
+                   [libcoap_SYMBOLS="-Wl,--version-script=\$(srcdir)/libcoap.map"],
+                   [libcoap_SYMBOLS="-export-symbols \$(srcdir)/libcoap.sym"])
 
 AC_SUBST(libcoap_SYMBOLS)
 
@@ -348,7 +346,7 @@ examples/coap-server.txt
 examples/coap-rd.txt
 include/coap/coap.h
 tests/Makefile
-libcoap-$LIBCOAP_API_VERSION.pc:libcoap-$LIBCOAP_API_VERSION.pc.in
+libcoap.pc:libcoap.pc.in
 ])
 
 AC_OUTPUT
@@ -357,7 +355,6 @@ AC_MSG_RESULT([
 libcoap configuration summary:
       libcoap package version : "$PACKAGE_VERSION"
       libcoap library version : "$LIBCOAP_SO_VERSION"
-      libcoap API version     : "$LIBCOAP_API_VERSION"
       host system             : "$host"]);
 if test "x$build_documentation" = "xyes" -a "x$DOXYGEN" != "x"; then
 	AC_MSG_RESULT([      build documentation     : "yes"])

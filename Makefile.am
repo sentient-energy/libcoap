@@ -17,8 +17,8 @@ EXTRA_DIST = \
   CONTRIBUTE \
   TODO \
   $(pkgconfig_DATA).in \
-  libcoap-$(LIBCOAP_API_VERSION).map \
-  libcoap-$(LIBCOAP_API_VERSION).sym \
+  libcoap.map \
+  libcoap.sym \
   examples/coap_list.h \
   tests/test_options.h \
   tests/test_pdu.h \
@@ -37,9 +37,9 @@ SUBDIRS = . $(DOC_DIR) tests examples
 ## The libtool archive file (.la) will be installed into the directory named
 ## by the predefined variable $(bindir), along with the actual shared library
 ## file (.so).
-lib_LTLIBRARIES = libcoap-@LIBCOAP_API_VERSION@.la
+lib_LTLIBRARIES = libcoap.la
 
-libcoap_@LIBCOAP_API_VERSION@_la_CFLAGS = \
+libcoap_la_CFLAGS = \
   -fPIC \
   -fPIE \
   $(AM_CFLAGS)
@@ -47,7 +47,7 @@ libcoap_@LIBCOAP_API_VERSION@_la_CFLAGS = \
 ## Define the source file list for the "libcoap.la" target.
 ## Note that it is not necessary to list header files which are already listed
 ## elsewhere in a _HEADERS variable assignment.
-libcoap_@LIBCOAP_API_VERSION@_la_SOURCES = \
+libcoap_la_SOURCES = \
   src/address.c \
   src/async.c \
   src/block.c \
@@ -92,7 +92,9 @@ libcoap_include_HEADERS = \
    include/coap/t_list.h \
    include/coap/uri.h \
    include/coap/uthash.h \
-   include/coap/utlist.h
+   include/coap/utlist.h \
+   coap_config.h    
+
 
 # If there is a API change to something $(LIBCOAP_API_VERSION) > 1 the install
 # prefix for the header files has to change to not conflict the older version
@@ -104,7 +106,7 @@ libcoap_include_HEADERS = \
 ## Instruct libtool to include API version information in the generated shared
 ## library file (.so). The library ABI version will later defined in configure.ac,
 ## so that all version information is kept in one place.
-libcoap_@LIBCOAP_API_VERSION@_la_LDFLAGS =					\
+libcoap_la_LDFLAGS =					\
   -version-info $(LT_LIBCOAP_CURRENT):$(LT_LIBCOAP_REVISION):$(LT_LIBCOAP_AGE)	\
   @libcoap_SYMBOLS@ \
   -pie
@@ -127,10 +129,10 @@ check_ctags:
 ## Helper target to generate the symbol table needed by libtool.
 ## The .map format is used when ld supports linker scripts, otherwise
 ## it must fall back to a plain symbol file.
-update-map-file: libcoap-$(LIBCOAP_API_VERSION).map libcoap-$(LIBCOAP_API_VERSION).sym
+update-map-file: libcoap.map libcoap.sym
 
-libcoap-$(LIBCOAP_API_VERSION).map: check_ctags $(libcoap_include_HEADERS)
-	( echo "VER_$(LIBCOAP_API_VERSION) {" ; \
+libcoap.map: check_ctags $(libcoap_include_HEADERS)
+	( echo "VER) {" ; \
 	echo "global:" ; \
 	ctags $(CTAGS_IGNORE) -f - --c-kinds=p $(libcoap_include_HEADERS) | awk '/^coap_/ { print "  " $$1 ";" }' | sort ; \
 	echo "local:" ; \
@@ -138,7 +140,7 @@ libcoap-$(LIBCOAP_API_VERSION).map: check_ctags $(libcoap_include_HEADERS)
 	echo "};" ) > $@.new
 	mv $@.new $@
 
-libcoap-$(LIBCOAP_API_VERSION).sym: check_ctags $(libcoap_include_HEADERS)
+libcoap.sym: check_ctags $(libcoap_include_HEADERS)
 	( ctags $(CTAGS_IGNORE) -f - --c-kinds=p $(libcoap_include_HEADERS) | awk '/^coap_/ { print $$1 }' | sort ) \
 	> $@.new
 	mv $@.new $@
@@ -148,7 +150,7 @@ libcoap-$(LIBCOAP_API_VERSION).sym: check_ctags $(libcoap_include_HEADERS)
 ## pkg-config files are also used for architecture-independent data packages,
 ## in which case the correct install location would be $(datadir)/pkgconfig.
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libcoap-$(LIBCOAP_API_VERSION).pc
+pkgconfig_DATA = libcoap.pc
 
 ## Define an independent executable script for inclusion in the distribution
 ## archive.  However, it will not be installed on an end user's system due to
