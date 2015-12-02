@@ -1465,7 +1465,13 @@ handle_request(coap_context_t *context, coap_queue_t *node) {
 	response->hdr->token_length = 0;
 	response->length = sizeof(coap_hdr_t);
       }
-
+      /* if it's a get request with user defined handler, don't send the ack 
+         it will be done later by the user
+      */
+      if (node->pdu->hdr->code == COAP_REQUEST_GET &&
+          response->hdr->code == COAP_RESPONSE_CODE(205)) {
+          return;
+      }
       if (response->hdr->type != COAP_MESSAGE_NON ||
 	  (response->hdr->code >= 64 
 	   && !coap_mcast_interface(&node->local_if))) {
